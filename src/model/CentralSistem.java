@@ -16,6 +16,7 @@ import java.util.Collections;
 public class CentralSistem {
 	protected static final String path = "data/Clubs.csv";
 	protected static final String pathOwner = "data/Owners.csv";
+	protected static final String pathSerialized = "data/owners.ser";
 	protected static final char searchByOwner = 'o';
 	protected static final char searchByClub = 'c';
 	protected static final char searchByPet = 'p';
@@ -61,7 +62,7 @@ public class CentralSistem {
 
 		while (line != null) {
 
-			String[] parts = line.split(";");
+			String[] parts = line.split(",");
 
 			String id = parts[0];
 			String name = parts[1];
@@ -89,14 +90,14 @@ public class CentralSistem {
 
 	}
 
-	public void saveOwners(Owner owner) throws FileNotFoundException, IOException {
-		ObjectOutputStream writting = new ObjectOutputStream(new FileOutputStream(pathOwner));
-		writting.writeObject(owner);
+	public void saveOwners() throws FileNotFoundException, IOException {
+		ObjectOutputStream writting = new ObjectOutputStream(new FileOutputStream(pathSerialized));
+		writting.writeObject(owners);
 		writting.close();
 	}
-	//falta
+
 	public void loadOwners() throws FileNotFoundException, IOException, ClassNotFoundException {
-		ObjectInputStream loading = new ObjectInputStream(new FileInputStream(pathOwner));
+		ObjectInputStream loading = new ObjectInputStream(new FileInputStream(pathSerialized));
 		owners = (ArrayList<Owner>) loading.readObject();
 		loading.close();
 	}
@@ -274,7 +275,7 @@ public class CentralSistem {
 		}
 	}
 
-	private Owner searchByIdOwner(String valueToLookFor) {
+	public Owner searchByIdOwner(String valueToLookFor) {
 		int start = 0;
 		int end = owners.size() - 1;
 		int position;
@@ -669,6 +670,7 @@ public class CentralSistem {
 			if (criterion == byIdOwner) {
 				timeBinary = 0;
 				timeBinary = System.currentTimeMillis();
+				sortByOwnerById();
 				searchByIdOwner(toSearch);
 				long end = System.currentTimeMillis();
 				timeSpentBinary(end);
@@ -678,11 +680,12 @@ public class CentralSistem {
 				searchByIdOwnerLineal(toSearch);
 				long endLineal = System.currentTimeMillis();
 				timeSpentLineal(endLineal);
-				
-				return searchByIdOwner(toSearch);
+
+				return searchByIdOwnerLineal(toSearch);
 			} else if (criterion == byNameOwner) {
 				timeBinary = 0;
 				timeBinary = System.currentTimeMillis();
+				sortByOwnerByName();
 				searchByNameOwner(toSearch);
 				long end = System.currentTimeMillis();
 				timeSpentBinary(end);
@@ -692,11 +695,12 @@ public class CentralSistem {
 				searchByNameOwnerLineal(toSearch);
 				long endLineal = System.currentTimeMillis();
 				timeSpentLineal(endLineal);
-				
-				return searchByNameOwner(toSearch);
+
+				return searchByNameOwnerLineal(toSearch);
 			} else if (criterion == byLastNameOwner) {
 				timeBinary = 0;
 				timeBinary = System.currentTimeMillis();
+				sortByOwnerByLastName();
 				searchByLastNameOwner(toSearch);
 				long end = System.currentTimeMillis();
 				timeSpentBinary(end);
@@ -706,11 +710,12 @@ public class CentralSistem {
 				searchByLastNameOwnerLineal(toSearch);
 				long endLineal = System.currentTimeMillis();
 				timeSpentLineal(endLineal);
-				
-				return searchByLastNameOwner(toSearch);
+
+				return searchByLastNameOwnerLineal(toSearch);
 			} else if (criterion == byBirthdateOwner) {
 				timeBinary = 0;
 				timeBinary = System.currentTimeMillis();
+				sortByOwnerByBirthdate();
 				searchByBirthdateOwner(toSearch);
 				long end = System.currentTimeMillis();
 				timeSpentBinary(end);
@@ -720,11 +725,12 @@ public class CentralSistem {
 				searchByBirthdateOwnerLineal(toSearch);
 				long endLineal = System.currentTimeMillis();
 				timeSpentLineal(endLineal);
-				
-				return searchByBirthdateOwner(toSearch);
+
+				return searchByBirthdateOwnerLineal(toSearch);
 			} else if (criterion == byKindOfPetsOwner) {
 				timeBinary = 0;
 				timeBinary = System.currentTimeMillis();
+				sortByOwnerByKindOfPets();
 				searchByKindOfPetsOwner(toSearch);
 				long end = System.currentTimeMillis();
 				timeSpentBinary(end);
@@ -734,14 +740,15 @@ public class CentralSistem {
 				searchByKindOfPetsOwnerLineal(toSearch);
 				long endLineal = System.currentTimeMillis();
 				timeSpentLineal(endLineal);
-				
-				return searchByKindOfPetsOwner(toSearch);
+
+				return searchByKindOfPetsOwnerLineal(toSearch);
 			}
 			return null;
 		} else if (type == searchByClub) {
 			if (criterion == byIdClub) {
 				timeBinary = 0;
 				timeBinary = System.currentTimeMillis();
+				sortByClubsById();
 				searchByIdClub(toSearch);
 				long end = System.currentTimeMillis();
 				timeSpentBinary(end);
@@ -751,11 +758,12 @@ public class CentralSistem {
 				searchByIdClubLineal(toSearch);
 				long endLineal = System.currentTimeMillis();
 				timeSpentLineal(endLineal);
-				
-				return searchByIdClub(toSearch);
+
+				return searchByIdClubLineal(toSearch);
 			} else if (criterion == byNameClub) {
 				timeBinary = 0;
 				timeBinary = System.currentTimeMillis();
+				sortByClubsByName();
 				searchByNameClub(toSearch);
 				long end = System.currentTimeMillis();
 				timeSpentBinary(end);
@@ -765,11 +773,12 @@ public class CentralSistem {
 				searchByNameClubLineal(toSearch);
 				long endLineal = System.currentTimeMillis();
 				timeSpentLineal(endLineal);
-				
-				return searchByNameClub(toSearch);
+
+				return searchByNameClubLineal(toSearch);
 			} else if (criterion == byCreationDateClub) {
 				timeBinary = 0;
 				timeBinary = System.currentTimeMillis();
+				sortByClubsByCreationDate();
 				searchByCreationDateClub(toSearch);
 				long end = System.currentTimeMillis();
 				timeSpentBinary(end);
@@ -779,14 +788,15 @@ public class CentralSistem {
 				searchByCreationDateClubLineal(toSearch);
 				long endLineal = System.currentTimeMillis();
 				timeSpentLineal(endLineal);
-				
-				return searchByCreationDateClub(toSearch);
+
+				return searchByCreationDateClubLineal(toSearch);
 			}
 			return null;
 		} else if (type == searchByPet) {
 			if (criterion == byIdPet) {
 				timeBinary = 0;
 				timeBinary = System.currentTimeMillis();
+				sortByPetById();
 				searchByIdPet(toSearch);
 				long end = System.currentTimeMillis();
 				timeSpentBinary(end);
@@ -796,11 +806,12 @@ public class CentralSistem {
 				searchByIdPetLineal(toSearch);
 				long endLineal = System.currentTimeMillis();
 				timeSpentLineal(endLineal);
-				
-				return searchByIdPet(toSearch);
+
+				return searchByIdPetLineal(toSearch);
 			} else if (criterion == byNamePet) {
 				timeBinary = 0;
 				timeBinary = System.currentTimeMillis();
+				sortByPetByName();
 				searchByNamePet(toSearch);
 				long end = System.currentTimeMillis();
 				timeSpentBinary(end);
@@ -810,11 +821,12 @@ public class CentralSistem {
 				searchByNamePetLineal(toSearch);
 				long endLineal = System.currentTimeMillis();
 				timeSpentLineal(endLineal);
-				
-				return searchByNamePet(toSearch);
+
+				return searchByNamePetLineal(toSearch);
 			} else if (criterion == byBithdatePet) {
 				timeBinary = 0;
 				timeBinary = System.currentTimeMillis();
+				sortByPetByBirthdate();
 				searchByBirthdatePet(toSearch);
 				long end = System.currentTimeMillis();
 				timeSpentBinary(end);
@@ -824,11 +836,12 @@ public class CentralSistem {
 				searchByBirthdatePetLineal(toSearch);
 				long endLineal = System.currentTimeMillis();
 				timeSpentLineal(endLineal);
-				
-				return searchByBirthdatePet(toSearch);
+
+				return searchByBirthdatePetLineal(toSearch);
 			} else if (criterion == byGenderPet) {
 				timeBinary = 0;
 				timeBinary = System.currentTimeMillis();
+				sortByPetByGender();
 				searchByGenderPet(toSearch);
 				long end = System.currentTimeMillis();
 				timeSpentBinary(end);
@@ -838,11 +851,12 @@ public class CentralSistem {
 				searchByGenderPetLineal(toSearch);
 				long endLineal = System.currentTimeMillis();
 				timeSpentLineal(endLineal);
-				
-				return searchByGenderPet(toSearch);
+
+				return searchByGenderPetLineal(toSearch);
 			} else if (criterion == byKindOfPet) {
 				timeBinary = 0;
 				timeBinary = System.currentTimeMillis();
+				sortByPetByKinfOfPet();
 				searchByKindOfPet(toSearch);
 				long end = System.currentTimeMillis();
 				timeSpentBinary(end);
@@ -852,8 +866,8 @@ public class CentralSistem {
 				searchByKindOfPetLineal(toSearch);
 				long endLineal = System.currentTimeMillis();
 				timeSpentLineal(endLineal);
-				
-				return	searchByKindOfPet(toSearch);
+
+				return searchByKindOfPetLineal(toSearch);
 			}
 			return null;
 		}
@@ -875,29 +889,31 @@ public class CentralSistem {
 			}
 		}
 	}
-	
-	public boolean addOwner(String id, String name, String lastName, String birthdate, String kindOfPets, String idPet,String birthdatePet,String namePet, String genderPet,String kindOfPet) {		
+
+	public boolean addOwner(String id, String name, String lastName, String birthdate, String kindOfPets, String idPet,
+			String birthdatePet, String namePet, String genderPet, String kindOfPet) {
 		boolean added = false;
-		if(searchByIdOwner(id) == null) {
-			Owner toAdd = new Owner (id,name,lastName,birthdate,kindOfPets,addPet(idPet,namePet,birthdatePet,genderPet,kindOfPet));
+		if (searchByIdOwner(id) == null) {
+			Owner toAdd = new Owner(id, name, lastName, birthdate, kindOfPets,
+					addPet(idPet, namePet, birthdatePet, genderPet, kindOfPet));
 			owners.add(toAdd);
-			added=true;
+			added = true;
 		}
 		return added;
 	}
-	
-	private Pet addPet(String id, String name,String birthdate,String gender,String kindOfPet) {
-		Pet toAdd = new Pet(id,name,birthdate,gender,kindOfPet);
+
+	private Pet addPet(String id, String name, String birthdate, String gender, String kindOfPet) {
+		Pet toAdd = new Pet(id, name, birthdate, gender, kindOfPet);
 		boolean is = false;
 		for (int I = 0; I < clubs.size(); I++) {
-			
+
 		}
-		if(!is) {
+		if (!is) {
 			return toAdd;
 		}
 		return null;
 	}
-	
+
 	private long timeSpentBinary(long end) {
 		timeBinary = timeBinary - end;
 
