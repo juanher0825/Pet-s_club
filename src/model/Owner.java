@@ -64,5 +64,10 @@ public class Owner {
 	public void setPet(Pet pet) {
 		this.pet = pet;
 	}
+	
+	public String toString() {
+		String a = id + " " + name + " " + lastName + " " + birthdate + " " + kindOfPets;
+		return a;
+	}
 
 }

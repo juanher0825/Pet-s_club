@@ -33,5 +33,11 @@ public class Club {
 	public void setCreationDate(String creationDate) {
 		this.creationDate = creationDate;
 	}
+	
+	public String toString() {
+		String a = id + " " + name + " " + creationDate;
+		
+		return a;
+	}
 
 }

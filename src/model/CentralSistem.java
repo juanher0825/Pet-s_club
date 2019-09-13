@@ -44,15 +44,12 @@ public class CentralSistem {
 	private long timeBinary;
 	private long timeLineal;
 
-	public CentralSistem() {
-		setOwners(new ArrayList<Owner>());
-		setClubs(new ArrayList<Club>());
-
-		try {
-			loadOwners();
-			loadClubs();
-		} catch (ClassNotFoundException | IOException e) {
-		}
+	public CentralSistem() throws IOException, ClassNotFoundException {
+		owners = new ArrayList<Owner>();
+		clubs = new ArrayList<Club>();
+		
+		loadClubs();
+		loadOwners();
 	}
 
 	public void loadClubs() throws IOException {
@@ -77,7 +74,7 @@ public class CentralSistem {
 		br.close();
 	}
 
-	public void saveClubs() throws FileNotFoundException {
+	/*public void saveClubs() throws FileNotFoundException {
 		PrintWriter writting = new PrintWriter(new File(path));
 		String tmp = "";
 
@@ -88,7 +85,7 @@ public class CentralSistem {
 		writting.print(tmp);
 		writting.close();
 
-	}
+	}*/
 
 	public void saveOwners() throws FileNotFoundException, IOException {
 		ObjectOutputStream writting = new ObjectOutputStream(new FileOutputStream(pathSerialized));
@@ -96,10 +93,33 @@ public class CentralSistem {
 		writting.close();
 	}
 
-	public void loadOwners() throws FileNotFoundException, IOException, ClassNotFoundException {
+	/*public void loadOwners() throws FileNotFoundException, IOException, ClassNotFoundException {
 		ObjectInputStream loading = new ObjectInputStream(new FileInputStream(pathSerialized));
 		owners = (ArrayList<Owner>) loading.readObject();
 		loading.close();
+	}*/
+	
+	public void loadOwners() throws IOException {
+		BufferedReader br = new BufferedReader(new FileReader(new File(pathOwner)));
+
+		String line = br.readLine();
+
+		while (line != null) {
+
+			String[] parts = line.split(",");
+
+			String id = parts[0];
+			String name = parts[1];
+			String lastName = parts[2];
+			String creationDate = parts[3];
+
+			Owner owner = new Owner(id,name,lastName,creationDate, "", null);
+
+			owners.add(owner);
+
+			line = br.readLine();
+		}
+		br.close();
 	}
 
 	public void sortByClubsByName() {
@@ -677,7 +697,7 @@ public class CentralSistem {
 
 				timeLineal = 0;
 				timeLineal = System.currentTimeMillis();
-				searchByIdOwnerLineal(toSearch);
+				System.out.println(toStringObjO(searchByIdOwnerLineal(toSearch)));
 				long endLineal = System.currentTimeMillis();
 				timeSpentLineal(endLineal);
 
@@ -692,7 +712,7 @@ public class CentralSistem {
 
 				timeLineal = 0;
 				timeLineal = System.currentTimeMillis();
-				searchByNameOwnerLineal(toSearch);
+				System.out.println(toStringObjO(searchByNameOwnerLineal(toSearch)));
 				long endLineal = System.currentTimeMillis();
 				timeSpentLineal(endLineal);
 
@@ -701,7 +721,7 @@ public class CentralSistem {
 				timeBinary = 0;
 				timeBinary = System.currentTimeMillis();
 				sortByOwnerByLastName();
-				searchByLastNameOwner(toSearch);
+				System.out.println(toStringObjO(searchByLastNameOwner(toSearch)));
 				long end = System.currentTimeMillis();
 				timeSpentBinary(end);
 
@@ -716,7 +736,7 @@ public class CentralSistem {
 				timeBinary = 0;
 				timeBinary = System.currentTimeMillis();
 				sortByOwnerByBirthdate();
-				searchByBirthdateOwner(toSearch);
+				System.out.println(toStringObjO(searchByBirthdateOwner(toSearch)));
 				long end = System.currentTimeMillis();
 				timeSpentBinary(end);
 
@@ -737,7 +757,7 @@ public class CentralSistem {
 
 				timeLineal = 0;
 				timeLineal = System.currentTimeMillis();
-				searchByKindOfPetsOwnerLineal(toSearch);
+				System.out.println(toStringObjO(searchByKindOfPetsOwnerLineal(toSearch)));
 				long endLineal = System.currentTimeMillis();
 				timeSpentLineal(endLineal);
 
@@ -755,7 +775,7 @@ public class CentralSistem {
 
 				timeLineal = 0;
 				timeLineal = System.currentTimeMillis();
-				searchByIdClubLineal(toSearch);
+				System.out.println(toStringObjC(searchByIdClubLineal(toSearch)));
 				long endLineal = System.currentTimeMillis();
 				timeSpentLineal(endLineal);
 
@@ -770,7 +790,7 @@ public class CentralSistem {
 
 				timeLineal = 0;
 				timeLineal = System.currentTimeMillis();
-				searchByNameClubLineal(toSearch);
+				System.out.println(toStringObjC(searchByNameClubLineal(toSearch)));
 				long endLineal = System.currentTimeMillis();
 				timeSpentLineal(endLineal);
 
@@ -785,7 +805,7 @@ public class CentralSistem {
 
 				timeLineal = 0;
 				timeLineal = System.currentTimeMillis();
-				searchByCreationDateClubLineal(toSearch);
+				System.out.println(toStringObjC(searchByCreationDateClubLineal(toSearch)));
 				long endLineal = System.currentTimeMillis();
 				timeSpentLineal(endLineal);
 
@@ -964,5 +984,34 @@ public class CentralSistem {
 
 	public long timeLineal() {
 		return timeLineal;
+	}
+	public String toString() {
+		
+		String a = "";
+		for (int I = 0; I < clubs.size(); I++) {
+			a += "" + clubs.get(I).toString() + "\n";
+		}
+		return a;
+	}
+	
+	public String toStringOwners() {
+		String a = "";
+		for (int I = 0; I < owners.size(); I++) {
+			
+			a += ""+ owners.get(I).toString() + "\n";
+		}
+		return a;
+	}
+	
+	public String toStringObjO(Owner owner) {
+		String a = owner.getId() + " " + owner.getName() + " " + owner.getLastName() + " "
+				+ owner.getBirthdate();
+		return a;
+	}
+	
+	public String toStringObjC(Club club) {
+		String a = club.getId() + " " + club.getName() + " "
+				+ club.getCreationDate();
+		return a;
 	}
 }
